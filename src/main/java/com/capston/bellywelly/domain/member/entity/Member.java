@@ -1,11 +1,7 @@
 package com.capston.bellywelly.domain.member.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class Member {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
 
 	@Column(nullable = false)
@@ -27,12 +22,13 @@ public class Member {
 	private String sex;
 
 	@Column(nullable = false)
-	private LocalDate birthday;
+	private String birthyear;
 
 	@Builder
-	public Member(String name, String sex, LocalDate birthday) {
+	public Member(Long memberId, String name, String sex, String birthyear) {
+		this.memberId = memberId;
 		this.name = name;
 		this.sex = sex;
-		this.birthday = birthday;
+		this.birthyear = birthyear;
 	}
 }
