@@ -43,6 +43,10 @@ public class MealService {
 				highFodmapList.add(meal.getMealName());
 			}
 		}
+
+		diet.updateLowFodmapCount(lowFodmapList.size());
+		diet.updateHighFodmapCount(highFodmapList.size());
+
 		return FodmapListDto.builder().lowFodmap(lowFodmapList).highFodmap(highFodmapList).build();
 	}
 

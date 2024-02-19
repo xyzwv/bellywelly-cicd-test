@@ -52,4 +52,12 @@ public class Diet extends BaseTimeEntity {
 		this.image = image;
 		this.mealtime = mealtime;
 	}
+
+	public void updateLowFodmapCount(Integer lowFodmapCount) {
+		this.lowFodmapCount = lowFodmapCount;
+	}
+
+	public void updateHighFodmapCount(Integer highFodmapCount) {
+		this.highFodmapCount = highFodmapCount;
+	}
 }
