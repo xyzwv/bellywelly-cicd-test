@@ -37,6 +37,9 @@ public class MealService {
 		List<String> highFodmapList = new ArrayList<>();
 		for (DietMeal dietMeal : dietMealList) {
 			Meal meal = dietMeal.getMeal();
+			if (meal == null) {
+				continue;
+			}
 			if (meal.getIsLowFodmap()) {
 				lowFodmapList.add(meal.getMealName());
 			} else {
@@ -59,6 +62,9 @@ public class MealService {
 		Float totalFiber = (float)0;
 		for (DietMeal dietMeal : dietMealList) {
 			Meal meal = dietMeal.getMeal();
+			if (meal == null) {
+				continue;
+			}
 			totalFructose += meal.getFructose();
 			totalSucrose += meal.getSucrose();
 			totalLactose += meal.getLactose();
