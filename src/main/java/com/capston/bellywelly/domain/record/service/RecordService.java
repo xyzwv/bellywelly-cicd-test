@@ -8,11 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.capston.bellywelly.domain.member.entity.Member;
 import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
+import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.Mealtime;
+import com.capston.bellywelly.domain.record.entity.Stress;
 import com.capston.bellywelly.domain.record.repository.DietMealRepository;
 import com.capston.bellywelly.domain.record.repository.DietRepository;
+import com.capston.bellywelly.domain.record.repository.StressRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +27,7 @@ public class RecordService {
 	private final DietRepository dietRepository;
 	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
+	private final StressRepository stressRepository;
 
 	public DietRecordResponseDto createDietRecord(DietRecordRequestDto requestDto) {
 		Member member = getCurrentUser();
@@ -46,4 +50,13 @@ public class RecordService {
 			.build();
 	}
 
+	public void createStressRecord(StressRequestDto requestDto) {
+		Member member = getCurrentUser();
+		stressRepository.save(
+			Stress.builder()
+				.member(member)
+				.degree(requestDto.getStress())
+				.build()
+		);
+	}
 }

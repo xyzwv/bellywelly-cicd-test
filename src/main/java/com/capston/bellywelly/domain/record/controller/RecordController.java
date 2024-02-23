@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
+import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.service.RecordService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,11 @@ public class RecordController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public DietRecordResponseDto createDietRecord(@RequestBody DietRecordRequestDto requestDto) {
 		return recordService.createDietRecord(requestDto);
+	}
+
+	@PostMapping("/stress")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createStressRecord(@RequestBody StressRequestDto requestDto) {
+		recordService.createStressRecord(requestDto);
 	}
 }
