@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capston.bellywelly.domain.record.dto.DefecationRequestDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
 import com.capston.bellywelly.domain.record.dto.StressRequestDto;
@@ -32,4 +33,11 @@ public class RecordController {
 	public void createStressRecord(@RequestBody StressRequestDto requestDto) {
 		recordService.createStressRecord(requestDto);
 	}
+
+	@PostMapping("/defecation")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createDefecationRecord(@RequestBody DefecationRequestDto requestDto) {
+		recordService.createDefecationRecord(requestDto);
+	}
+
 }

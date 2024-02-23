@@ -50,12 +50,13 @@ public class Defecation extends BaseTimeEntity {
 
 	@Builder
 	public Defecation(Member member, StoolScale form, Integer urgency, StoolColor color, Integer satisfaction,
-		Integer duration) {
+		Integer duration, Integer score) {
 		this.member = member;
 		this.form = form;
 		this.urgency = urgency;
 		this.color = color;
 		this.satisfaction = satisfaction;
 		this.duration = duration;
+		this.score = score;
 	}
 }
