@@ -10,10 +10,12 @@ public class DefecationService {
 
 	public Integer calculateScore(StoolScale form, Integer urgency, StoolColor color, Integer satisfaction,
 		Integer duration) {
-		Integer score = 0;
+		int score = 100;
 
-		// 점수 계산 로직직
-
-		return score;
+		return score += (form.getScore()
+			+ 3 * (1 - urgency)
+			+ color.getScore()
+			+ 3 * (satisfaction - 5)
+			+ 4 * (1 - duration));
 	}
 }
