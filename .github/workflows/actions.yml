@@ -55,4 +55,5 @@ jobs:
             sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
             sudo docker-compose up -d
+            sudo docker run -d ${{ secrets.DOCKER_REPO }}:latest
             sudo docker image prune -f
