@@ -1,5 +1,7 @@
 package com.capston.bellywelly.domain.record.service;
 
+import static com.capston.bellywelly.global.SecurityUtil.*;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +30,8 @@ public class DietService {
 	public Diet createDiet(Member member, DietRecordRequestDto requestDto) {
 		Mealtime mealtime = Mealtime.from(requestDto.getMealtime());
 		if (!mealtime.equals(Mealtime.OTHER)) { // mealtime이 아침, 점심, 저녁일 때
-			if (dietRepository.existsByCreatedDateBetweenAndMealtime(
+			if (dietRepository.existsByMemberAndCreatedDateBetweenAndMealtime(
+				member,
 				LocalDate.now().atTime(0, 0, 0),
 				LocalDate.now().atTime(23, 59, 59, 999999999),
 				Mealtime.from(requestDto.getMealtime()))
@@ -47,7 +50,8 @@ public class DietService {
 
 	public Diet findDiet(LocalDate date, int value) {
 		// createdDate의 날짜가 date인 diet list 생성
-		List<Diet> dietListByDate = dietRepository.findAllByCreatedDateBetween(
+		List<Diet> dietListByDate = dietRepository.findAllByMemberAndCreatedDateBetween(
+			getCurrentUser(),
 			date.atTime(0, 0, 0),
 			date.atTime(23, 59, 59, 999999999));
 		// list가 비었으면 에러 발생
