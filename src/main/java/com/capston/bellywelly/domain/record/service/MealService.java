@@ -2,7 +2,7 @@ package com.capston.bellywelly.domain.record.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +16,11 @@ import com.capston.bellywelly.domain.record.repository.DietMealRepository;
 import com.capston.bellywelly.domain.record.repository.MealRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MealService {
 
@@ -28,7 +30,7 @@ public class MealService {
 	public List<Meal> findMealList(List<String> mealNameList) {
 		return mealNameList.stream()
 			.map(mealName -> mealRepository.findByMealName(mealName).orElse(null))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	public FodmapListDto findLowOrHighFodmap(Diet diet) {
@@ -80,4 +82,12 @@ public class MealService {
 			.build();
 	}
 
+	public List<String> findMealnameList(Diet diet) {
+		List<DietMeal> dietMealList = dietMealRepository.findAllByDiet(diet);
+		// DietMeal에서 getMeal() 호출 시 null 반환 가능성 있음
+		List<Meal> mealList = dietMealList.stream().map(DietMeal::getMeal).toList();
+		return mealList.stream()
+			.filter(Objects::nonNull)
+			.map(Meal::getMealName).toList();
+	}
 }
