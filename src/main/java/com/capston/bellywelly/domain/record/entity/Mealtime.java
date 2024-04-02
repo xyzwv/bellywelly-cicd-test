@@ -9,12 +9,13 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Mealtime {
-	BREAKFAST("아침"),
-	LUNCH("점심"),
-	DINNER("저녁"),
-	OTHER("기타");
+	BREAKFAST("아침", 1),
+	LUNCH("점심", 2),
+	DINNER("저녁", 3),
+	OTHER("기타", 4);
 
 	private final String name;
+	private final int value;
 
 	public static Mealtime from(String name) {
 		return Arrays.stream(Mealtime.values())
@@ -25,5 +26,12 @@ public enum Mealtime {
 
 	public static String to(Mealtime mealtime) {
 		return mealtime.name;
+	}
+
+	public static Mealtime fromValue(int value) {
+		return Arrays.stream(Mealtime.values())
+			.filter(mealtime -> (mealtime.value == value))
+			.findFirst()
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid mealtime: " + value));
 	}
 }

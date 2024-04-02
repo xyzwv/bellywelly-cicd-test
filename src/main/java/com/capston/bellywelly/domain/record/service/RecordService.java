@@ -2,6 +2,8 @@ package com.capston.bellywelly.domain.record.service;
 
 import static com.capston.bellywelly.global.SecurityUtil.*;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +15,11 @@ import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.entity.Defecation;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
-import com.capston.bellywelly.domain.record.entity.Mealtime;
 import com.capston.bellywelly.domain.record.entity.StoolColor;
 import com.capston.bellywelly.domain.record.entity.StoolScale;
 import com.capston.bellywelly.domain.record.entity.Stress;
 import com.capston.bellywelly.domain.record.repository.DefecationRepository;
 import com.capston.bellywelly.domain.record.repository.DietMealRepository;
-import com.capston.bellywelly.domain.record.repository.DietRepository;
 import com.capston.bellywelly.domain.record.repository.StressRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RecordService {
 
-	private final DietRepository dietRepository;
+	private final DietService dietService;
 	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
 	private final StressRepository stressRepository;
@@ -39,12 +39,7 @@ public class RecordService {
 	public DietRecordResponseDto createDietRecord(DietRecordRequestDto requestDto) {
 		Member member = getCurrentUser();
 
-		Diet diet = Diet.builder()
-			.member(member)
-			.image(requestDto.getImage())
-			.mealtime(Mealtime.from(requestDto.getMealtime()))
-			.build();
-		dietRepository.save(diet);
+		Diet diet = dietService.createDiet(member, requestDto);
 
 		mealService.findMealList(requestDto.getMeal())
 			.forEach(meal -> dietMealRepository.save(DietMeal.builder().diet(diet).meal(meal).build()));
@@ -88,4 +83,14 @@ public class RecordService {
 		);
 	}
 
+	public DietRecordResponseDto findDietRecord(LocalDate date, int mealtime) {
+		Diet diet = dietService.findDiet(date, mealtime);
+
+		return DietRecordResponseDto.builder()
+			.diet(diet)
+			.meal(mealService.findMealnameList(diet))
+			.fodmapList(mealService.findLowOrHighFodmap(diet))
+			.nutrient(mealService.sumNutrientComponent(diet))
+			.build();
+	}
 }

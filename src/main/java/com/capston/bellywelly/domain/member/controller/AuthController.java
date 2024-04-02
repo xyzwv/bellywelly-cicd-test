@@ -11,8 +11,11 @@ import com.capston.bellywelly.domain.member.dto.LoginRequestDto;
 import com.capston.bellywelly.domain.member.dto.LoginResponseDto;
 import com.capston.bellywelly.domain.member.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "인증", description = "인증 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -20,6 +23,7 @@ public class AuthController {
 
 	private final AuthService authService;
 
+	@Operation(summary = "로그인")
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.CREATED)
 	public LoginResponseDto login(@RequestBody LoginRequestDto requestDto) {
