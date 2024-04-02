@@ -13,8 +13,11 @@ import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
 import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.service.RecordService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "기록", description = "기록 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/records")
@@ -22,18 +25,21 @@ public class RecordController {
 
 	private final RecordService recordService;
 
+	@Operation(summary = "식단 기록 작성")
 	@PostMapping("/diet")
 	@ResponseStatus(HttpStatus.CREATED)
 	public DietRecordResponseDto createDietRecord(@RequestBody DietRecordRequestDto requestDto) {
 		return recordService.createDietRecord(requestDto);
 	}
 
+	@Operation(summary = "스트레스 기록 작성")
 	@PostMapping("/stress")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createStressRecord(@RequestBody StressRequestDto requestDto) {
 		recordService.createStressRecord(requestDto);
 	}
 
+	@Operation(summary = "배변 기록 작성")
 	@PostMapping("/defecation")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createDefecationRecord(@RequestBody DefecationRequestDto requestDto) {
