@@ -1,9 +1,13 @@
 package com.capston.bellywelly.domain.record.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +48,13 @@ public class RecordController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createDefecationRecord(@RequestBody DefecationRequestDto requestDto) {
 		recordService.createDefecationRecord(requestDto);
+	}
+
+	@Operation(summary = "식단 기록 조회")
+	@GetMapping("/records/diet")
+	@ResponseStatus(HttpStatus.OK)
+	public DietRecordResponseDto findDietRecord(@RequestParam LocalDate date, @RequestParam int mealtime) {
+		return recordService.findDietRecord(date, mealtime);
 	}
 
 }

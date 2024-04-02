@@ -2,6 +2,8 @@ package com.capston.bellywelly.domain.record.service;
 
 import static com.capston.bellywelly.global.SecurityUtil.*;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,4 +83,14 @@ public class RecordService {
 		);
 	}
 
+	public DietRecordResponseDto findDietRecord(LocalDate date, int mealtime) {
+		Diet diet = dietService.findDiet(date, mealtime);
+
+		return DietRecordResponseDto.builder()
+			.diet(diet)
+			.meal(mealService.findMealnameList(diet))
+			.fodmapList(mealService.findLowOrHighFodmap(diet))
+			.nutrient(mealService.sumNutrientComponent(diet))
+			.build();
+	}
 }
