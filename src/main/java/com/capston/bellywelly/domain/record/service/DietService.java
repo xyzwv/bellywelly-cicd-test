@@ -26,6 +26,17 @@ public class DietService {
 	private final DietRepository dietRepository;
 
 	public Diet createDiet(Member member, DietRecordRequestDto requestDto) {
+		Mealtime mealtime = Mealtime.from(requestDto.getMealtime());
+		if (!mealtime.equals(Mealtime.OTHER)) { // mealtime이 아침, 점심, 저녁일 때
+			if (dietRepository.existsByCreatedDateBetweenAndMealtime(
+				LocalDate.now().atTime(0, 0, 0),
+				LocalDate.now().atTime(23, 59, 59, 999999999),
+				Mealtime.from(requestDto.getMealtime()))
+			) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"해당 시간에 식단 기록이 이미 존재합니다. mealtime: " + requestDto.getMealtime());
+			}
+		}
 		return dietRepository.save(
 			Diet.builder()
 				.member(member)
