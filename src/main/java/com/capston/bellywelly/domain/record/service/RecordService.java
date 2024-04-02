@@ -13,13 +13,11 @@ import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.entity.Defecation;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
-import com.capston.bellywelly.domain.record.entity.Mealtime;
 import com.capston.bellywelly.domain.record.entity.StoolColor;
 import com.capston.bellywelly.domain.record.entity.StoolScale;
 import com.capston.bellywelly.domain.record.entity.Stress;
 import com.capston.bellywelly.domain.record.repository.DefecationRepository;
 import com.capston.bellywelly.domain.record.repository.DietMealRepository;
-import com.capston.bellywelly.domain.record.repository.DietRepository;
 import com.capston.bellywelly.domain.record.repository.StressRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RecordService {
 
-	private final DietRepository dietRepository;
+	private final DietService dietService;
 	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
 	private final StressRepository stressRepository;
@@ -39,12 +37,7 @@ public class RecordService {
 	public DietRecordResponseDto createDietRecord(DietRecordRequestDto requestDto) {
 		Member member = getCurrentUser();
 
-		Diet diet = Diet.builder()
-			.member(member)
-			.image(requestDto.getImage())
-			.mealtime(Mealtime.from(requestDto.getMealtime()))
-			.build();
-		dietRepository.save(diet);
+		Diet diet = dietService.createDiet(member, requestDto);
 
 		mealService.findMealList(requestDto.getMeal())
 			.forEach(meal -> dietMealRepository.save(DietMeal.builder().diet(diet).meal(meal).build()));
