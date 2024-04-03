@@ -22,6 +22,21 @@ public class DefecationService {
 
 	private final DefecationRepository defecationRepository;
 
+	public void createDefecation(Member member, StoolScale form, Integer urgency, StoolColor color,
+		Integer satisfaction, Integer duration) {
+		defecationRepository.save(
+			Defecation.builder()
+				.member(member)
+				.form(form)
+				.urgency(urgency)
+				.color(color)
+				.satisfaction(satisfaction)
+				.duration(duration)
+				.score(calculateScore(form, urgency, color, satisfaction, duration))
+				.build()
+		);
+	}
+
 	public Integer calculateScore(StoolScale form, Integer urgency, StoolColor color, Integer satisfaction,
 		Integer duration) {
 		int score = 100;

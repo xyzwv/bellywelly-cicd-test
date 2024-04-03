@@ -14,12 +14,10 @@ import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
 import com.capston.bellywelly.domain.record.dto.HomeResponseDto;
 import com.capston.bellywelly.domain.record.dto.StressRequestDto;
-import com.capston.bellywelly.domain.record.entity.Defecation;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.StoolColor;
 import com.capston.bellywelly.domain.record.entity.StoolScale;
-import com.capston.bellywelly.domain.record.repository.DefecationRepository;
 import com.capston.bellywelly.domain.record.repository.DietMealRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,6 @@ public class RecordService {
 	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
 	private final StressService stressService;
-	private final DefecationRepository defecationRepository;
 	private final DefecationService defecationService;
 
 	public DietRecordResponseDto createDietRecord(DietRecordRequestDto requestDto) {
@@ -61,23 +58,8 @@ public class RecordService {
 
 	public void createDefecationRecord(DefecationRequestDto requestDto) {
 		Member member = getCurrentUser();
-		StoolScale form = StoolScale.from(requestDto.getForm());
-		Integer urgency = requestDto.getUrgency();
-		StoolColor color = StoolColor.from(requestDto.getColor());
-		Integer satisfaction = requestDto.getSatisfaction();
-		Integer duration = requestDto.getDuration();
-
-		defecationRepository.save(
-			Defecation.builder()
-				.member(member)
-				.form(form)
-				.urgency(urgency)
-				.color(color)
-				.satisfaction(satisfaction)
-				.duration(duration)
-				.score(defecationService.calculateScore(form, urgency, color, satisfaction, duration))
-				.build()
-		);
+		defecationService.createDefecation(member, StoolScale.from(requestDto.getForm()), requestDto.getUrgency(),
+			StoolColor.from(requestDto.getColor()), requestDto.getSatisfaction(), requestDto.getDuration());
 	}
 
 	public DietRecordResponseDto findDietRecord(LocalDate date, int mealtime) {
