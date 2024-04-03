@@ -17,7 +17,9 @@ import com.capston.bellywelly.domain.member.entity.Member;
 import com.capston.bellywelly.domain.record.dto.DietInfoDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.entity.Diet;
+import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.Mealtime;
+import com.capston.bellywelly.domain.record.repository.DietMealRepository;
 import com.capston.bellywelly.domain.record.repository.DietRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class DietService {
 
 	private final DietRepository dietRepository;
+	private final DietMealRepository dietMealRepository;
+	private final MealService mealService;
 
 	public Diet createDiet(Member member, DietRecordRequestDto requestDto) {
 		Mealtime mealtime = Mealtime.from(requestDto.getMealtime());
@@ -42,12 +46,19 @@ public class DietService {
 					"해당 시간에 식단 기록이 이미 존재합니다. mealtime: " + requestDto.getMealtime());
 			}
 		}
-		return dietRepository.save(
+
+		Diet diet = dietRepository.save( // Diet 생성
 			Diet.builder()
 				.member(member)
 				.image(requestDto.getImage())
 				.mealtime(Mealtime.from(requestDto.getMealtime()))
 				.build());
+
+		mealService.findMealList(requestDto.getMeal()) // mealnameList로부터 mealList를 찾아오고
+			.forEach(meal -> dietMealRepository.save(
+				DietMeal.builder().diet(diet).meal(meal).build())); // mealList와 diet를 DietMeal에 삽입
+
+		return diet;
 	}
 
 	public Diet findDiet(LocalDate date, int value) {

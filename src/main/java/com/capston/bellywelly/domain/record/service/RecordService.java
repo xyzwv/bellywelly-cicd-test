@@ -15,34 +15,24 @@ import com.capston.bellywelly.domain.record.dto.DietRecordResponseDto;
 import com.capston.bellywelly.domain.record.dto.HomeResponseDto;
 import com.capston.bellywelly.domain.record.dto.StressRequestDto;
 import com.capston.bellywelly.domain.record.entity.Diet;
-import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.StoolColor;
 import com.capston.bellywelly.domain.record.entity.StoolScale;
-import com.capston.bellywelly.domain.record.repository.DietMealRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class RecordService {
 
 	private final DietService dietService;
-	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
 	private final StressService stressService;
 	private final DefecationService defecationService;
 
 	public DietRecordResponseDto createDietRecord(DietRecordRequestDto requestDto) {
 		Member member = getCurrentUser();
-
 		Diet diet = dietService.createDiet(member, requestDto);
-
-		mealService.findMealList(requestDto.getMeal())
-			.forEach(meal -> dietMealRepository.save(DietMeal.builder().diet(diet).meal(meal).build()));
-
 		return DietRecordResponseDto.builder()
 			.diet(diet)
 			.meal(requestDto.getMeal())
