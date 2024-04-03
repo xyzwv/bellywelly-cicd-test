@@ -102,7 +102,7 @@ public class RecordService {
 	public HomeResponseDto getDailyRecord() {
 		Member member = getCurrentUser();
 		LocalDate today = LocalDate.now();
-		LocalDateTime startOfToady = today.atTime(0, 0, 0);
+		LocalDateTime startOfToady = today.atStartOfDay();
 		LocalDateTime endOfToady = today.atTime(23, 59, 59, 999999999);
 
 		return HomeResponseDto.builder()

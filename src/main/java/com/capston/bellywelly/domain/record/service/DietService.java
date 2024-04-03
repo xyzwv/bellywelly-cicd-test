@@ -34,7 +34,7 @@ public class DietService {
 		if (!mealtime.equals(Mealtime.OTHER)) { // mealtime이 아침, 점심, 저녁일 때
 			if (dietRepository.existsByMemberAndCreatedDateBetweenAndMealtime(
 				member,
-				LocalDate.now().atTime(0, 0, 0),
+				LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23, 59, 59, 999999999),
 				Mealtime.from(requestDto.getMealtime()))
 			) {
@@ -54,7 +54,7 @@ public class DietService {
 		// createdDate의 날짜가 date인 diet list 생성
 		List<Diet> dietListByDate = dietRepository.findAllByMemberAndCreatedDateBetween(
 			getCurrentUser(),
-			date.atTime(0, 0, 0),
+			date.atStartOfDay(),
 			date.atTime(23, 59, 59, 999999999));
 		// list가 비었으면 에러 발생
 		if (dietListByDate.isEmpty()) {

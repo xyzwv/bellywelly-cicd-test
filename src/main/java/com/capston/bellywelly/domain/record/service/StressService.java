@@ -28,7 +28,7 @@ public class StressService {
 		LocalDate startDateOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
 		List<Stress> stressList = stressRepository.findAllByMemberAndCreatedDateBetween(member,
-			startDateOfWeek.atTime(0, 0, 0),
+			startDateOfWeek.atStartOfDay(),
 			startDateOfWeek.plusDays(6).atTime(23, 59, 59, 999999999)
 		);
 
