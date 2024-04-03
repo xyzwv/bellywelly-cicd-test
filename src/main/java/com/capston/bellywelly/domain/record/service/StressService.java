@@ -24,6 +24,15 @@ public class StressService {
 
 	private final StressRepository stressRepository;
 
+	public void createStress(Member member, Integer degree) {
+		stressRepository.save(
+			Stress.builder()
+				.member(member)
+				.degree(degree)
+				.build()
+		);
+	}
+
 	public StressWeekDto getStressInfoInThisWeek(Member member, LocalDate today) {
 		LocalDate startDateOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 

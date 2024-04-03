@@ -19,10 +19,8 @@ import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.StoolColor;
 import com.capston.bellywelly.domain.record.entity.StoolScale;
-import com.capston.bellywelly.domain.record.entity.Stress;
 import com.capston.bellywelly.domain.record.repository.DefecationRepository;
 import com.capston.bellywelly.domain.record.repository.DietMealRepository;
-import com.capston.bellywelly.domain.record.repository.StressRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,6 @@ public class RecordService {
 	private final DietMealRepository dietMealRepository;
 	private final MealService mealService;
 	private final StressService stressService;
-	private final StressRepository stressRepository;
 	private final DefecationRepository defecationRepository;
 	private final DefecationService defecationService;
 
@@ -59,12 +56,7 @@ public class RecordService {
 
 	public void createStressRecord(StressRequestDto requestDto) {
 		Member member = getCurrentUser();
-		stressRepository.save(
-			Stress.builder()
-				.member(member)
-				.degree(requestDto.getStress())
-				.build()
-		);
+		stressService.createStress(member, requestDto.getStress());
 	}
 
 	public void createDefecationRecord(DefecationRequestDto requestDto) {
