@@ -3,6 +3,7 @@ package com.capston.bellywelly.domain.record.service;
 import static com.capston.bellywelly.global.SecurityUtil.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.capston.bellywelly.domain.member.entity.Member;
+import com.capston.bellywelly.domain.record.dto.DietInfoDto;
 import com.capston.bellywelly.domain.record.dto.DietRecordRequestDto;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.Mealtime;
@@ -86,5 +88,31 @@ public class DietService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "mealtime은 1 이상이어야 합니다.");
 		}
+	}
+
+	public DietInfoDto getDailyDietInfo(Member member, LocalDateTime startOfToday, LocalDateTime endOfToday) {
+		List<Diet> dietList = dietRepository.findAllByMemberAndCreatedDateBetween(member, startOfToday, endOfToday);
+
+		int lowFodmapCount = dietList.stream().mapToInt(Diet::getLowFodmapCount).sum();
+		int highFodmapCount = dietList.stream().mapToInt(Diet::getHighFodmapCount).sum();
+		int lowFodmapRatio = Math.round(((float)lowFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
+		int highFodmapRatio = Math.round(((float)highFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
+
+		return DietInfoDto.builder()
+			.comment(getDailyDietComment(lowFodmapCount, highFodmapCount))
+			.lowFodmapRatio(lowFodmapRatio)
+			.highFodmapRatio((lowFodmapRatio + highFodmapRatio > 100) ? (highFodmapRatio - 1) : highFodmapRatio)
+			.hasBreakfast(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.BREAKFAST)))
+			.hasLunch(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.LUNCH)))
+			.hasDinner(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.DINNER)))
+			.hasOther(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.OTHER)))
+			.build();
+	}
+
+	public String getDailyDietComment(Integer lowFodmapCount, Integer highFodmapCount) {
+		if (lowFodmapCount.equals(highFodmapCount)) {
+			return "soso";
+		}
+		return (lowFodmapCount > highFodmapCount) ? "good" : "bad";
 	}
 }
