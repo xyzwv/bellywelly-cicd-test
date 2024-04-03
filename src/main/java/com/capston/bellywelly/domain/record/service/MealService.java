@@ -3,6 +3,7 @@ package com.capston.bellywelly.domain.record.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,9 @@ public class MealService {
 
 	public List<Meal> findMealList(List<String> mealNameList) {
 		return mealNameList.stream()
-			.map(mealName -> mealRepository.findByMealName(mealName).orElse(null))
+			.map(mealRepository::findByMealName)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
 			.toList();
 	}
 
