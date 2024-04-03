@@ -54,7 +54,7 @@ public class DefecationService {
 			defecationRepository.findAllByMemberAndCreatedDateBetween(member, startOfToday, endOfToday);
 		return DefecationInfoDto.builder()
 			.count(defecationList.size())
-			.score(defecationList.stream().mapToInt(Defecation::getScore).sum())
+			.score((int)defecationList.stream().mapToInt(Defecation::getScore).average().orElse(0))
 			.build();
 	}
 }
