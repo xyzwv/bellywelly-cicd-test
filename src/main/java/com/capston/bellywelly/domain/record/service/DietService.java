@@ -110,6 +110,7 @@ public class DietService {
 			.comment(getDailyDietComment(lowFodmapCount, highFodmapCount))
 			.lowFodmapRatio(lowFodmapRatio)
 			.highFodmapRatio((lowFodmapRatio + highFodmapRatio > 100) ? (highFodmapRatio - 1) : highFodmapRatio)
+			.hasDiet(!dietList.isEmpty())
 			.hasBreakfast(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.BREAKFAST)))
 			.hasLunch(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.LUNCH)))
 			.hasDinner(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.DINNER)))
