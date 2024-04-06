@@ -33,8 +33,8 @@ public class StressService {
 		);
 	}
 
-	public StressWeekDto getStressInfoInThisWeek(Member member, LocalDate today) {
-		LocalDate startDateOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+	public StressWeekDto getStressInfoInThisWeek(Member member, LocalDate date) {
+		LocalDate startDateOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
 		List<Stress> stressList = stressRepository.findAllByMemberAndCreatedDateBetween(member,
 			startDateOfWeek.atStartOfDay(),
