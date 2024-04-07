@@ -1,6 +1,6 @@
 package com.capston.bellywelly.global.feign.dto.chatgpt;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,5 +10,5 @@ import lombok.Getter;
 public class ChatgptReportRequestDto {
 
 	private String model;
-	private ArrayList<MessageDto> messages;
+	private List<MessageDto> messages;
 }

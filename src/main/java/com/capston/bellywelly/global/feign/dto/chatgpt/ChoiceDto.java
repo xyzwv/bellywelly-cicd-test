@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 public class ChoiceDto {
 
 	private Integer index;
-	private MessageDto delta;
+	private MessageDto message;
 }

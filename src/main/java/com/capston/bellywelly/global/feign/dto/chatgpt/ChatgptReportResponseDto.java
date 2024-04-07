@@ -1,6 +1,6 @@
 package com.capston.bellywelly.global.feign.dto.chatgpt;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ChatgptReportResponseDto {
 
 	private String id;
-	private ArrayList<ChoiceDto> choices;
+	private List<ChoiceDto> choices;
 }
