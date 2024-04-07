@@ -2,6 +2,7 @@ package com.capston.bellywelly.global.config;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,9 +11,13 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class SwaggerConfig {
+
+	@Value("${server.url}")
+	private String serverUrl;
 
 	@Bean
 	public OpenAPI openApi() {
@@ -29,6 +34,8 @@ public class SwaggerConfig {
 						.scheme("bearer")
 						.bearerFormat("JWT")))
 			.security(Collections.singletonList(
-				new SecurityRequirement().addList("authorization")));
+				new SecurityRequirement().addList("authorization")))
+			.servers(Collections.singletonList(
+				new Server().url(serverUrl)));
 	}
 }
