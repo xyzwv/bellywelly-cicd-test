@@ -103,8 +103,8 @@ public class DietService {
 
 		int lowFodmapCount = dietList.stream().mapToInt(Diet::getLowFodmapCount).sum();
 		int highFodmapCount = dietList.stream().mapToInt(Diet::getHighFodmapCount).sum();
-		int lowFodmapRatio = Math.round(((float)lowFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
-		int highFodmapRatio = Math.round(((float)highFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
+		int lowFodmapRatio = Math.round(((float)lowFodmapCount / (lowFodmapCount + highFodmapCount)) * 100);
+		int highFodmapRatio = Math.round(((float)highFodmapCount / (lowFodmapCount + highFodmapCount)) * 100);
 
 		return DietInfoDto.builder()
 			.comment(getDailyDietComment(lowFodmapCount, highFodmapCount))
