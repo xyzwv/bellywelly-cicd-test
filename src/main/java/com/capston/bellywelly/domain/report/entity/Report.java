@@ -28,6 +28,9 @@ public class Report extends BaseTimeEntity {
 	private Member member;
 
 	@Column(nullable = false)
+	private Integer year;
+
+	@Column(nullable = false)
 	private Integer month;
 
 	@Column(nullable = false)
@@ -43,8 +46,9 @@ public class Report extends BaseTimeEntity {
 	private String stressAnalysis;
 
 	@Builder
-	public Report(Member member, Integer month, Integer week,
+	public Report(Member member, Integer year, Integer month, Integer week,
 		String feedback, String defecationAnalysis, String stressAnalysis) {
+		this.year = year;
 		this.member = member;
 		this.month = month;
 		this.week = week;
