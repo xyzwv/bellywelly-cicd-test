@@ -3,6 +3,7 @@ package com.capston.bellywelly.global.config;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,9 @@ public class SecurityConfig {
 
 	private final JwtTokenProvider jwtTokenProvider;
 
+	@Value("${server.url}")
+	private String serverUrl;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -37,7 +41,7 @@ public class SecurityConfig {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://bellywelly.kro.kr"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://bellywelly.kro.kr", serverUrl));
 		configuration.setAllowedMethods(List.of("*"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
