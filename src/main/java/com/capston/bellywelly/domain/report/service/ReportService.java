@@ -15,9 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.capston.bellywelly.domain.member.entity.Member;
+import com.capston.bellywelly.domain.report.dto.DefecationStressGraphDto;
+import com.capston.bellywelly.domain.report.dto.DefecationStressReportResponseDto;
 import com.capston.bellywelly.domain.report.dto.DietReportResponseDto;
 import com.capston.bellywelly.domain.report.dto.MealListDto;
 import com.capston.bellywelly.domain.report.entity.Report;
+import com.capston.bellywelly.domain.report.entity.ReportDefecationStress;
 import com.capston.bellywelly.domain.report.entity.ReportMeal;
 import com.capston.bellywelly.domain.report.repository.ReportDefecationStressRepository;
 import com.capston.bellywelly.domain.report.repository.ReportMealRepository;
@@ -102,5 +105,27 @@ public class ReportService {
 					.build()
 				))
 				.build());
+	}
+
+	public DefecationStressReportResponseDto findDefecationStressReport(Integer year, Integer month, Integer week) {
+		Member member = getCurrentUser();
+		Report report = reportRepository.findByMemberAndYearAndMonthAndWeek(member, year, month, week)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 레포트가 존재하지 않습니다."));
+		List<ReportDefecationStress> reportDefecationStressList =
+			reportDefecationStressRepository.findAllByReport(report);
+
+		List<Integer> defecationScoreList = reportDefecationStressList.stream()
+			.map(ReportDefecationStress::getDefecationScore).toList();
+
+		List<Integer> stressDegreeList = reportDefecationStressList.stream()
+			.map(ReportDefecationStress::getStressDegree).toList();
+
+		return DefecationStressReportResponseDto.builder()
+			.year(report.getYear()).month(report.getMonth()).week(report.getWeek())
+			.feedback(report.getFeedback())
+			.graphDto(DefecationStressGraphDto.builder()
+				.defecation(defecationScoreList).stress(stressDegreeList).build())
+			.defecationAnalysis(report.getDefecationAnalysis())
+			.stressAnalysis(report.getStressAnalysis()).build();
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capston.bellywelly.domain.report.dto.DefecationStressReportResponseDto;
 import com.capston.bellywelly.domain.report.dto.DietReportResponseDto;
 import com.capston.bellywelly.domain.report.service.ReportService;
 
@@ -33,5 +34,12 @@ public class ReportController {
 	public DietReportResponseDto findDietReportByWeek(@RequestParam Integer year, @RequestParam Integer month,
 		@RequestParam Integer week) {
 		return reportService.findDietReport(year, month, week);
+	}
+
+	@GetMapping("/defecation")
+	@ResponseStatus(HttpStatus.OK)
+	public DefecationStressReportResponseDto findDefecationStressReportByWeek(
+		@RequestParam Integer year, @RequestParam Integer month, @RequestParam Integer week) {
+		return reportService.findDefecationStressReport(year, month, week);
 	}
 }
