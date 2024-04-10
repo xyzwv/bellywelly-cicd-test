@@ -27,6 +27,6 @@ public class AuthController {
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.CREATED)
 	public LoginResponseDto login(@RequestBody LoginRequestDto requestDto) {
-		return authService.login(requestDto.getCode());
+		return authService.login(requestDto.getCode(), requestDto.getRedirectUri());
 	}
 }
