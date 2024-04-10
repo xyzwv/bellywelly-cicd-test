@@ -51,7 +51,7 @@ public class RecordController {
 	}
 
 	@Operation(summary = "식단 기록 조회")
-	@GetMapping("/records/diet")
+	@GetMapping("/diet")
 	@ResponseStatus(HttpStatus.OK)
 	public DietRecordResponseDto findDietRecord(@RequestParam LocalDate date, @RequestParam int mealtime) {
 		return recordService.findDietRecord(date, mealtime);
