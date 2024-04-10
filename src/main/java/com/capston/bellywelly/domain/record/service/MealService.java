@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.capston.bellywelly.domain.record.dto.FodmapListDto;
 import com.capston.bellywelly.domain.record.dto.NutrientDto;
+import com.capston.bellywelly.domain.record.dto.NutrientValueGraphDto;
 import com.capston.bellywelly.domain.record.entity.Diet;
 import com.capston.bellywelly.domain.record.entity.DietMeal;
 import com.capston.bellywelly.domain.record.entity.Meal;
@@ -79,13 +80,14 @@ public class MealService {
 			totalMaltose += meal.getMaltose();
 			totalFiber += meal.getFiber();
 		}
+
+		List<Integer> graphList = getNutrientRatio(totalFructose, totalSucrose, totalLactose, totalMaltose, totalFiber);
 		return NutrientDto.builder()
-			.fructose(totalFructose)
-			.sucrose(totalSucrose)
-			.lactose(totalLactose)
-			.maltose(totalMaltose)
-			.fiber(totalFiber)
-			.graph(getNutrientRatio(totalFructose, totalSucrose, totalLactose, totalMaltose, totalFiber))
+			.fructose(NutrientValueGraphDto.builder().value(totalFructose).graph(graphList.get(0)).build())
+			.sucrose(NutrientValueGraphDto.builder().value(totalSucrose).graph(graphList.get(1)).build())
+			.lactose(NutrientValueGraphDto.builder().value(totalLactose).graph(graphList.get(2)).build())
+			.maltose(NutrientValueGraphDto.builder().value(totalMaltose).graph(graphList.get(3)).build())
+			.fiber(NutrientValueGraphDto.builder().value(totalFiber).graph(graphList.get(4)).build())
 			.build();
 	}
 
@@ -98,14 +100,13 @@ public class MealService {
 			.map(Meal::getMealName).toList();
 	}
 
-	public List<Float> getNutrientRatio(Float fructose, Float sucrose, Float lactose, Float maltose, Float fiber) {
+	public List<Integer> getNutrientRatio(Float fructose, Float sucrose, Float lactose, Float maltose, Float fiber) {
 		List<Float> nutrientList = Arrays.asList(fructose, sucrose, lactose, maltose, fiber);
 		Float max = Collections.max(nutrientList);
 		if (max <= 0) {
-			return Arrays.asList((float)0, (float)0, (float)0, (float)0, (float)0);
+			return Arrays.asList(0, 0, 0, 0, 0);
 		} else {
-			return nutrientList.stream().map(nutrient -> nutrient / max).collect(Collectors.toList());
+			return nutrientList.stream().map(nutrient -> (int)(nutrient / max * 100)).collect(Collectors.toList());
 		}
-
 	}
 }
