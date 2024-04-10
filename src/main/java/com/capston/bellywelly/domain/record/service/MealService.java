@@ -1,9 +1,12 @@
 package com.capston.bellywelly.domain.record.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +85,7 @@ public class MealService {
 			.lactose(totalLactose)
 			.maltose(totalMaltose)
 			.fiber(totalFiber)
+			.graph(getNutrientRatio(totalFructose, totalSucrose, totalLactose, totalMaltose, totalFiber))
 			.build();
 	}
 
@@ -92,5 +96,16 @@ public class MealService {
 		return mealList.stream()
 			.filter(Objects::nonNull)
 			.map(Meal::getMealName).toList();
+	}
+
+	public List<Float> getNutrientRatio(Float fructose, Float sucrose, Float lactose, Float maltose, Float fiber) {
+		List<Float> nutrientList = Arrays.asList(fructose, sucrose, lactose, maltose, fiber);
+		Float max = Collections.max(nutrientList);
+		if (max <= 0) {
+			return Arrays.asList((float)0, (float)0, (float)0, (float)0, (float)0);
+		} else {
+			return nutrientList.stream().map(nutrient -> nutrient / max).collect(Collectors.toList());
+		}
+
 	}
 }

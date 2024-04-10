@@ -1,5 +1,7 @@
 package com.capston.bellywelly.domain.record.dto;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,4 +14,5 @@ public class NutrientDto {
 	private Float lactose;
 	private Float maltose;
 	private Float fiber;
+	private List<Float> graph;
 }
