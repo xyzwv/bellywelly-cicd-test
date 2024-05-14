@@ -124,4 +124,11 @@ public class DietService {
 		}
 		return (lowFodmapCount > highFodmapCount) ? "good" : "bad";
 	}
+
+	public List<Diet> findTodayDietList() {
+		LocalDate today = LocalDate.now();
+		Member member = getCurrentUser();
+		return dietRepository.findAllByMemberAndCreatedDateBetween(member, today.atStartOfDay(),
+			today.atTime(23, 59, 59, 999999999));
+	}
 }
