@@ -35,12 +35,9 @@ public class AuthService {
 	@Value("${kakao.client-secret}")
 	private String clientSecret;
 
-	@Value("${kakao.redirect-uri}")
-	private String redirectUri;
-
-	public LoginResponseDto login(String code) {
+	public LoginResponseDto login(String code, String redirectUri) {
 		// 카카오에 인가 코드를 보내 토큰 발급받기
-		String kakaoAccessToken = getKakaoToken(code);
+		String kakaoAccessToken = getKakaoToken(code, redirectUri);
 		// 카카오에 토큰을 보내 사용자 정보 받기
 		KakaoUserResponseDto kakaoUserInfo = getKakaoUserInfo(kakaoAccessToken);
 		// 카카오 회원번호(=member pk)로 가입 여부 확인
@@ -52,7 +49,7 @@ public class AuthService {
 			.build();
 	}
 
-	public String getKakaoToken(String code) {
+	public String getKakaoToken(String code, String redirectUri) {
 		KakaoTokenResponseDto responseDto = kakaoTokenClient.getAccessToken(
 			KakaoTokenRequestDto.builder()
 				.grant_type("authorization_code")

@@ -10,6 +10,7 @@ public class DietInfoDto {
 	private String comment;
 	private Integer lowFodmapRatio;
 	private Integer highFodmapRatio;
+	private Boolean hasDiet;
 	private Boolean hasBreakfast;
 	private Boolean hasLunch;
 	private Boolean hasDinner;

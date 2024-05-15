@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class NutrientDto {
 
-	private Float fructose;
-	private Float sucrose;
-	private Float lactose;
-	private Float maltose;
-	private Float fiber;
+	private NutrientValueGraphDto fructose;
+	private NutrientValueGraphDto sucrose;
+	private NutrientValueGraphDto lactose;
+	private NutrientValueGraphDto maltose;
+	private NutrientValueGraphDto fiber;
 }

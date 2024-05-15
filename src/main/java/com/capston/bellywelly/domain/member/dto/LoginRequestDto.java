@@ -6,4 +6,5 @@ import lombok.Getter;
 public class LoginRequestDto {
 
 	private String code;
+	private String redirectUri;
 }

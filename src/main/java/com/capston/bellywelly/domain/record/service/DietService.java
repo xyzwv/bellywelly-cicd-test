@@ -103,13 +103,14 @@ public class DietService {
 
 		int lowFodmapCount = dietList.stream().mapToInt(Diet::getLowFodmapCount).sum();
 		int highFodmapCount = dietList.stream().mapToInt(Diet::getHighFodmapCount).sum();
-		int lowFodmapRatio = Math.round(((float)lowFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
-		int highFodmapRatio = Math.round(((float)highFodmapCount / (lowFodmapCount + highFodmapCount))) * 100;
+		int lowFodmapRatio = Math.round(((float)lowFodmapCount / (lowFodmapCount + highFodmapCount)) * 100);
+		int highFodmapRatio = Math.round(((float)highFodmapCount / (lowFodmapCount + highFodmapCount)) * 100);
 
 		return DietInfoDto.builder()
 			.comment(getDailyDietComment(lowFodmapCount, highFodmapCount))
 			.lowFodmapRatio(lowFodmapRatio)
 			.highFodmapRatio((lowFodmapRatio + highFodmapRatio > 100) ? (highFodmapRatio - 1) : highFodmapRatio)
+			.hasDiet(!dietList.isEmpty())
 			.hasBreakfast(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.BREAKFAST)))
 			.hasLunch(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.LUNCH)))
 			.hasDinner(dietList.stream().anyMatch(diet -> diet.getMealtime().equals(Mealtime.DINNER)))
@@ -122,5 +123,12 @@ public class DietService {
 			return "soso";
 		}
 		return (lowFodmapCount > highFodmapCount) ? "good" : "bad";
+	}
+
+	public List<Diet> findTodayDietList() {
+		LocalDate today = LocalDate.now();
+		Member member = getCurrentUser();
+		return dietRepository.findAllByMemberAndCreatedDateBetween(member, today.atStartOfDay(),
+			today.atTime(23, 59, 59, 999999999));
 	}
 }

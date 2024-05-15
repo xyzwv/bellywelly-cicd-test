@@ -1,8 +1,11 @@
 package com.capston.bellywelly.domain.record.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +27,7 @@ public class HomeController {
 	@Operation(summary = "일일 기록 현황 조회")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public HomeResponseDto getDailyRecord() {
-		return recordService.getDailyRecord();
+	public HomeResponseDto getDailyRecord(@RequestParam LocalDate date) {
+		return recordService.getDailyRecord(date);
 	}
 }

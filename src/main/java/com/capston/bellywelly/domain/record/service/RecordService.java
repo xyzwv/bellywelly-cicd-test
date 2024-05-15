@@ -63,16 +63,15 @@ public class RecordService {
 			.build();
 	}
 
-	public HomeResponseDto getDailyRecord() {
+	public HomeResponseDto getDailyRecord(LocalDate date) {
 		Member member = getCurrentUser();
-		LocalDate today = LocalDate.now();
-		LocalDateTime startOfToady = today.atStartOfDay();
-		LocalDateTime endOfToady = today.atTime(23, 59, 59, 999999999);
+		LocalDateTime startOfToady = date.atStartOfDay();
+		LocalDateTime endOfToady = date.atTime(23, 59, 59, 999999999);
 
 		return HomeResponseDto.builder()
 			.diet(dietService.getDailyDietInfo(member, startOfToady, endOfToady))
 			.defecation(defecationService.getDailyDefecationInfo(member, startOfToady, endOfToady))
-			.stress(stressService.getStressInfoInThisWeek(member, today))
+			.stress(stressService.getStressInfoInThisWeek(member, date))
 			.build();
 	}
 }
