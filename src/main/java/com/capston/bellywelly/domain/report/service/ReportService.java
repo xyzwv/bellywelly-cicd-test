@@ -8,7 +8,6 @@ import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +24,6 @@ import com.capston.bellywelly.domain.report.entity.ReportMeal;
 import com.capston.bellywelly.domain.report.repository.ReportDefecationStressRepository;
 import com.capston.bellywelly.domain.report.repository.ReportMealRepository;
 import com.capston.bellywelly.domain.report.repository.ReportRepository;
-import com.capston.bellywelly.global.feign.client.ChatgptReportClient;
-import com.capston.bellywelly.global.feign.dto.chatgpt.ChatgptReportRequestDto;
-import com.capston.bellywelly.global.feign.dto.chatgpt.ChatgptReportResponseDto;
-import com.capston.bellywelly.global.feign.dto.chatgpt.MessageDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,13 +35,6 @@ public class ReportService {
 	private final ReportRepository reportRepository;
 	private final ReportMealRepository reportMealRepository;
 	private final ReportDefecationStressRepository reportDefecationStressRepository;
-	private final ChatgptReportClient chatgptReportClient;
-
-	@Value("${openai.model}")
-	private String model;
-
-	@Value("${openai.secret-key}")
-	private String openAiKey;
 
 	public void createReport() {  // 일요일 시작 시간에 주간 레포트 자동으로 생성
 
@@ -92,19 +80,6 @@ public class ReportService {
 		WeekFields weekFields = WeekFields.of(Locale.getDefault());
 		TemporalField weekOfMonth = weekFields.weekOfMonth();
 		return date.get(weekOfMonth);
-	}
-
-	public ChatgptReportResponseDto getChatCompletion() {  // gpt 채팅 결과 받아오는 메서드
-		return chatgptReportClient.getComment(
-			"Bearer " + openAiKey,
-			ChatgptReportRequestDto.builder()
-				.model(model)
-				.messages(List.of(MessageDto.builder()
-					.role("user")
-					.content("(임시) 일주일 식단, 배변, 스트레스 기록 데이터")
-					.build()
-				))
-				.build());
 	}
 
 	public DefecationStressReportResponseDto findDefecationStressReport(Integer year, Integer month, Integer week) {
